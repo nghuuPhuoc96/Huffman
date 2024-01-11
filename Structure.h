@@ -10,11 +10,9 @@
 struct Node
 {
     char alphabet;
-    uint8_t binaryDecision;
     float frequency;
     Node *left;
     Node *right;
-    Node *parent;
 };
 
 struct probabilityTable

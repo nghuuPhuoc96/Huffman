@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 #include "Structure.h"
-#include "Huffman.h"
+//#include "Huffman.h"
 
 class ComputeFrequency //: public Huffman
 {

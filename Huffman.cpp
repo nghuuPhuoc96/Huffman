@@ -1,22 +1,18 @@
 #include "Huffman.h"
 Huffman::Huffman()
 {
-    for (int i = 0; i < NUMBER_OF_CHARACTER; i++)
-    {
-        var_Queue_encoding[i].character = INVALID_CHARACTER;
-        var_Queue_encoding[i].encodingHuffman = 0xff;
-    }
-    root->parent = nullptr;
+    
 }
 Huffman::~Huffman()
 {
 }
-void Huffman::g_Huffman_NodeCreate(probabilityTable listTable[])
+void Huffman::g_Huffman_NodeCreate(std::string p_string)
 {
     // Create every single node
     Node *node;
     int k = 0;
-    while (listTable[k].probabilityAppearance != INVALID_FREQUENCY)
+    std::vector<probabilityTable> l_probabilityTable = g_ComputeFrequency_FrequencyProcessing(p_string);
+    for (int i = 0; i < l_probabilityTable.size(); i++)
     {
         node = new Node;
         // Convert from raw data to Node
@@ -24,8 +20,8 @@ void Huffman::g_Huffman_NodeCreate(probabilityTable listTable[])
         //
         //
         // Only leaf had character
-        node->alphabet = listTable[k].character;
-        node->frequency = listTable[k].probabilityAppearance;
+        node->alphabet = l_probabilityTable[i].character;
+        node->frequency = l_probabilityTable[i].probabilityAppearance;
         node->left = nullptr;
         node->right = nullptr;
         //
@@ -33,16 +29,6 @@ void Huffman::g_Huffman_NodeCreate(probabilityTable listTable[])
         //
         // add to array of pointer, managed by Queue class
         g_Queue_Insert(node);
-        //
-        //
-        //
-        // backup data in Huffman object: leaf node and character
-        var_Queue_encoding[k].character = listTable[k].character;
-        leafNode[k] = node;
-        //
-        //
-        //
-        k = k + 1;
     }
 }
 void Huffman::g_Huffman_Procedure()
@@ -66,10 +52,6 @@ void Huffman::g_Huffman_Procedure()
         z = new Node;
         x = g_Queue_Deletion();
         y = g_Queue_Deletion();
-        x->binaryDecision = 0; // left child
-        y->binaryDecision = 1; // right child
-        x->parent = z;
-        y->parent = z;
         //
         //
         //
@@ -95,41 +77,8 @@ void Huffman::g_Huffman_Procedure()
     root = g_Queue_GetNode(g_Queue_TopIs());
 }
 
-void Huffman::g_Huffman_Encoding()
+void Huffman::g_Huffman_Encoding(std::string p_string)
 {
-    int k = 0;
-    int VariableLengthCodeword = 0;
-    uint8_t binary = 0;
-    Node *travesal;
-    //
-    //
-    //
-    while (var_Queue_encoding[k].character != INVALID_CHARACTER)
-    {
-        travesal = leafNode[k];
-        while (travesal->parent != nullptr)
-        {
-            binary = 0;
-            binary = travesal->binaryDecision << (8 - VariableLengthCodeword);
-            //
-            //
-            //
-            // Get binary code from node
-            var_Queue_encoding[k].encodingHuffman |= binary;
-            //
-            //
-            //
-            // Increase code word order
-            VariableLengthCodeword = VariableLengthCodeword + 1;
-            //
-            //
-            //
-            // Go backward to root
-            travesal = travesal->parent;
-        }
-        //
-        //
-        // Final fixed-length-code
-        var_Queue_encoding[k].encodingHuffman = var_Queue_encoding[k].encodingHuffman >> (8 - VariableLengthCodeword + 1);
-    }
+    g_Huffman_NodeCreate(p_string);
+    g_Huffman_Procedure();
 }

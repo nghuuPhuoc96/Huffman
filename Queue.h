@@ -2,6 +2,7 @@
 #define QUEUE_H
 
 #include <iostream>
+#include <vector>
 // #include "ComputeFrequency.h"
 //  #include "Huffman.h"
 #include "Structure.h"
@@ -9,7 +10,8 @@
 class Queue
 {
 private:
-    Node *listNode[NUMBER_OF_CHARACTER];
+    //Node *listNode[NUMBER_OF_CHARACTER];
+    std::vector<Node*> listNode;
     uint8_t top;
 
 public:

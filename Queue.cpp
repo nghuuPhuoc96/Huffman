@@ -12,11 +12,13 @@ Queue::~Queue()
 void Queue::g_Queue_Insert(Node *p_node)
 {
     top += 1;
+    listNode.push_back(new Node());
     listNode[top] = p_node;
 }
 
 Node *Queue::g_Queue_Deletion()
 {
+    listNode.pop_back();
     return listNode[top--];
 }
 
