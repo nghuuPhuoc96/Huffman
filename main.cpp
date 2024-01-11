@@ -3,6 +3,7 @@
 #include <cstring>
 #include <vector>
 #include <cstdlib>
+#include "ComputeFrequency.h"
 
 int main()
 {
@@ -10,6 +11,10 @@ int main()
     // Option 2: use const char*
     char *char_ptr = new char(tmp.length() + 1);
     strcpy(char_ptr, tmp.c_str());
+
+    ComputeFrequency testTmp;
+    testTmp.g_ComputeFrequency_FrequencyProcessing("ABCDABABAADBC");
+
 
     // Huffman algothrism
 

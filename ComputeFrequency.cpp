@@ -3,60 +3,59 @@ ComputeFrequency::ComputeFrequency()
 {
     for (int i = 0; i < NUMBER_OF_CHARACTER; i++)
     {
-        listTable[i].probabilityAppearance = INVALID_FREQUENCY;
+        listTable.push_back(probabilityTable());
         listTable[i].character = INVALID_CHARACTER;
+        listTable[i].probabilityAppearance = 0;
     }
 }
 ComputeFrequency::~ComputeFrequency()
 {
 }
 
-bool ComputeFrequency::g_ComputeFrequency_FrequencyProcessing(std::string p_string)
+std::vector<probabilityTable> ComputeFrequency::g_ComputeFrequency_FrequencyProcessing(std::string p_string)
 {
-    bool retProbability = true;
-
-    int lengthOfString = p_string.length();
+    std::vector<probabilityTable> retProbability;
     int numberOfCharInString = 0;
-    int i, j;
+    int i, j, k = 0;;
     int indexAtMax = 0;
-
-    while (p_string[0] != '\0')
+    
+    // Counting method
+    for (i = 0; i < p_string.length(); i++)
     {
-        int k = 0;
-        char currentCharacter = p_string[0];
-        int m_count = 0;
-        while (p_string[k] != '\0')
-        {
-            if (currentCharacter == p_string[k])
-            {
-                m_count += 1;
-                // remove duplicate character in given string
-                p_string.erase(k, 1);
-                continue;
-            }
-            k += 1;
-        }
-        // calculate probability of character p_string[k]
-        listTable[numberOfCharInString].character = currentCharacter;
-        listTable[numberOfCharInString].probabilityAppearance = (float)((float)m_count / lengthOfString);
-        numberOfCharInString += 1;
+        listTable[p_string[i]].character = p_string[i];
+        listTable[p_string[i]].probabilityAppearance += (float)(1.0/(float)(p_string.length()));
     }
 
-    // Soft: maximum -> minimum
-    for (i = 0; i < 10; i++)
+    for (i = 0; i < listTable.size(); i++)
     {
-        float maxp_string = listTable[i].probabilityAppearance;
-        for (j = i + 1; j < 10; j++)
+        if (listTable[i].character != INVALID_CHARACTER)
         {
-            if (maxp_string <= listTable[j].probabilityAppearance)
-            {
-                maxp_string = listTable[j].probabilityAppearance;
-                indexAtMax = j;
-            }
+            retProbability.push_back(probabilityTable());
+            retProbability[k].character = listTable[i].character;
+            retProbability[k].probabilityAppearance = listTable[i].probabilityAppearance;
+            k += 1;
         }
-        // Set the max value at index i
-        listTable[indexAtMax].probabilityAppearance = listTable[i].probabilityAppearance;
-        listTable[i].probabilityAppearance = maxp_string;
+    }
+
+
+    // Insert sort
+    //
+    // Soft: maximum -> minimum
+    for (i = 1; i < retProbability.size(); i++)
+    {
+        float key = retProbability[i].probabilityAppearance;
+        char bkChar = retProbability[i].character;
+
+        // Insert A[i] into the sorted subarray
+        j = i - 1;
+        while (j >= 0 && retProbability[j].probabilityAppearance < key)
+        {
+            retProbability[j+1].probabilityAppearance = retProbability[j].probabilityAppearance;
+            retProbability[j+1].character = retProbability[j].character;
+            j = j - 1;
+        }
+        retProbability[j+1].probabilityAppearance = key;
+        retProbability[j+1].character = bkChar;
     }
 
     return retProbability;

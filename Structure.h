@@ -3,9 +3,9 @@
 
 #include <stdint.h>
 
-#define NUMBER_OF_CHARACTER 1024
+#define NUMBER_OF_CHARACTER 127
 #define INVALID_FREQUENCY 2
-#define INVALID_CHARACTER 128
+#define INVALID_CHARACTER 127
 
 struct Node
 {
